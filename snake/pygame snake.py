@@ -120,8 +120,8 @@ def main(best):
     snake = s.makeSnake() 
     # food
     f = Food(width,edge) # food size = lattice size
-    foodr = f.get_food() 
-    f.get_foodpos(foodr,snake) 
+    foodr = f.get_food() # Generate rect object
+    f.get_foodpos(foodr,snake) # Randomly generate food location
     # lattice
     b = Background(width,edge)
 
@@ -146,7 +146,7 @@ def main(best):
                 elif event.key == K_LEFT and validDirect != 2: direct = 3 
                 elif event.key == K_RIGHT and validDirect != 3: direct = 2 
 
-        
+        #background color
         screen.fill(black)
         
         if dt > interval: 
@@ -159,32 +159,35 @@ def main(best):
         
         
         b.drawGrid(screen) 
-        
+        #Update score
         scoret=b.scoref.render(str(score), True, (255, 255, 255)) 
         screen.blit(scoret, (0, 0)) 
         scoret2=b.scoref.render('best:'+str(best), True, (255, 255, 255)) 
         screen.blit(scoret2, (width-6*edge, 0)) 
         #food
         screen.blit(f.food, foodr) 
+        #Update the position of food(Surface object) according to fr(Rect object), draw
         
         clli = s.strike(snake,foodr)
-        if clli == 0: 
+        if clli == 0: #if hit the wall,Bump into self
             going = False
-        elif clli == 1: 
-            snake.append(endPop) 
+        elif clli == 1: #eat food
+            snake.append(endPop) #grow up
             score += 1
-            if not f.get_foodpos(foodr,snake): going = False 
+            if not f.get_foodpos(foodr,snake): going = False #Generate new location for food
         
+        
+        #Screen refresh, display image
         pygame.display.flip() 
     
-    
+    #Best game record
     if score > best:
         return score
     else:
         return best
                 
 if __name__ == '__main__':
-    best = 0 
+    best = 0  #The score of this game
     while True:
         best = main(best) 
         time.sleep(1)
